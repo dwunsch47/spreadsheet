@@ -20,17 +20,16 @@ public:
     std::string GetText() const override;
     std::vector<Position> GetReferencedCells() const override;
 
-    bool IsReferenced() const;
-
 private:
     class Impl;
     class EmptyImpl;
     class TextImpl;
     class FormulaImpl;
+    bool CausesCircularDependency(const Impl& impl) const;
+    void RecursiveCacheInvalidation();
 
     std::unique_ptr<Impl> impl_;
-
-    // Добавьте поля и методы для связи с таблицей, проверки циклических 
-    // зависимостей, графа зависимостей и т. д.
-
+    Sheet& sheet_;
+    std::unordered_set<Cell*> l_nodes_;
+    std::unordered_set<Cell*> r_nodes_;
 };
